@@ -1,0 +1,77 @@
+<template>
+  <div class="new-task" :class="[checked ? 'strikebg' : '']">
+      <div class="header">
+        <input type="checkbox" name="" v-model="checked" @click="editComplite">
+        <p :class="[checked ? 'strike' : '', 'text-task']" v-if="!editTask">{{this.task.textNote}}</p><input class="task-input" v-else v-model="selectTask" type="text">
+      </div>
+      <div class="footer">
+          <button class="save" @click="toggleEditTask"><span v-if="!editTask">Редагувати</span><span @click="emitEditTask(index, selectTask)" v-else>Зберегти</span> </button>
+          <button class="delete" @click="emitDeleteTask(index)">Видалити</button>
+      </div>
+    
+  </div>
+</template>
+
+<script>
+export default {
+  props:['task', 'index', 'emitDeleteTask', 'emitEditTask'],
+  data () {
+    return {
+      selectTask: '',
+      editTask: false,
+      checked: false
+    }
+  },
+  methods:{
+    toggleEditTask(){
+        this.editTask = !this.editTask;
+        this.selectTaslMethod();
+    },
+    editComplite(){
+        if(!this.checked){
+          
+        }
+    },
+    selectTaslMethod(){
+      this.selectTask = this.task.textNote;
+    }
+  }
+}
+</script>
+
+<style>
+.text-task{
+  font-weight: bold;
+  width: 100%;
+}
+.new-task{
+    padding: 10px;
+    width: 220px;
+    background-color: rgba(204, 63, 63, 0.644);
+    box-shadow: 0px 0px 29px -2px rgba(0,0,0,0.45);
+    margin: 10px;
+    margin-right: 20px;
+}
+.header{
+    display: flex;
+    align-items: baseline;
+}
+button{
+    font-size: 18px;
+}
+.task-input{
+    margin: 13px 0;
+}
+.strike{
+    text-decoration:line-through;
+}
+.strikebg{
+  background-color: rgb(30, 161, 25);
+}
+.save{
+  background-color: rgb(43, 59, 151);
+}
+.delete{
+  background-color: rgb(136, 20, 20);
+}
+</style>
