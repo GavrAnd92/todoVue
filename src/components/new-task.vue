@@ -1,40 +1,39 @@
 <template>
-  <div class="new-task" :class="[checked ? 'strikebg' : '']">
+  <div class="new-task" :class="[task.checked ? 'strikebg' : '']">
       <div class="header">
-        <input type="checkbox" name="" v-model="checked" @click="editComplite">
-        <p :class="[checked ? 'strike' : '', 'text-task']" v-if="!editTask">{{this.task.textNote}}</p><input class="task-input" v-else v-model="selectTask" type="text">
+        <input type="checkbox" name="" v-model="task.checked" @click="editComplite(index)">
+        <p :class="[task.checked ? 'strike' : '', 'text-task']" v-if="!editTask">{{this.task.textNote}}</p><input class="task-input" v-else v-model="selectTask" type="text">
       </div>
       <div class="footer">
-          <button class="save" @click="toggleEditTask"><span v-if="!editTask">Редагувати</span><span @click="emitEditTask(index, selectTask)" v-else>Зберегти</span> </button>
+          <button class="save" v-if="!editTask" @click="toggleEditTask">Редагувати</button>
+          <button v-else class="save" @click="selectTaslMethod()">Ок</button>
           <button class="delete" @click="emitDeleteTask(index)">Видалити</button>
       </div>
-    
+
   </div>
 </template>
 
 <script>
 export default {
-  props:['task', 'index', 'emitDeleteTask', 'emitEditTask'],
+  props:['task', 'index', 'emitDeleteTask', 'emitEditTask', 'editComplite'],
   data () {
     return {
       selectTask: '',
-      editTask: false,
-      checked: false
+      editTask: false
     }
   },
   methods:{
     toggleEditTask(){
         this.editTask = !this.editTask;
-        this.selectTaslMethod();
-    },
-    editComplite(){
-        if(!this.checked){
-          
-        }
+        this.selectTask = this.task.textNote;
     },
     selectTaslMethod(){
-      this.selectTask = this.task.textNote;
+      this.editTask = !this.editTask;
+      this.emitEditTask(this.index, this.selectTask);
     }
+  },
+  components:{
+    
   }
 }
 </script>
@@ -69,6 +68,7 @@ button{
   background-color: rgb(30, 161, 25);
 }
 .save{
+  min-width: 110px;
   background-color: rgb(43, 59, 151);
 }
 .delete{

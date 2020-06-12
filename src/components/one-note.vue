@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="text-note">{{note.textNote}}</p>      
+    <p :class="[note.checked ? 'checked' : '', 'text-note']">{{note.textNote}}</p>      
   </div>
 </template>
 
@@ -30,5 +30,9 @@ export default {
   font-size: 20px;
   font-weight: bold;
   color: rgb(22, 21, 21);
+}
+.checked{
+  background-color: rgb(30, 161, 25);
+  text-decoration:line-through;
 }
 </style>

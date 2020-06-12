@@ -2,34 +2,44 @@
   <div class="all-note">
     <h4 class="title-home-note">{{note.title}}</h4>
       <div class="see-note">
-        <tag-one-note v-for="(item, index) in note.task" :key="index" :note="item"></tag-one-note>
+        <div v-if="note.task[0]">
+          <tag-one-note v-for="(item, index) in note.task" :key="index" :note="item"></tag-one-note>
+        </div>
+        <div class="task-0" v-else>
+          Завдання відсутні
+        </div>
+        
       </div>
 
       <div class="note-home-but">
-        <router-link :to="{name: 'selectNote', params:{note:note, indexNote:index, taskDelete: taskDelete, editTask: editTask}}">
+        <router-link :to="{name: 'selectNote', params:{note:note, indexNote:index, save:save}}">
         <button class="save">Редагувати</button>
       </router-link>
         
-        <button @click="$emit('noteDelete', index)" class="delete">Видалити</button>
+        <button @click="noteDelete" class="delete">Видалити</button>
       </div>
-      
+      <tag-dialogue v-show="dialogue" @yes="$emit('noteDelete', index)" @no="noteDelete" :text="'видалити замітку'"></tag-dialogue>
   </div>
 </template>
 
 <script>
 import OneNote from './one-note';
+import Bg from './dialogue';
 export default {
-  props:['note', 'index', 'taskDelete', 'editTask'],
+  props:['note', 'index', 'save'],
   data () {
     return {
-      
+      dialogue: false
     }
   },
   methods:{
-   
+   noteDelete(){
+     this.dialogue = !this.dialogue;
+   }
   },
   components:{
-    'tag-one-note': OneNote
+    'tag-one-note': OneNote,
+    'tag-dialogue': Bg
   }
 }
 </script>
@@ -76,5 +86,12 @@ button{
 .note-home-but{
   margin: 40px 7%;
   margin-bottom: 0;
+}
+.task-0{
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  color: rgba(3, 77, 77, 0.219);
+  margin-top: 20px;
 }
 </style>

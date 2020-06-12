@@ -6,43 +6,63 @@
       </div>
       <hr>
       <div class="buttons">
-        <button class="add" type="button"><i class="fas fa-plus"></i>Додати завдання</button>
-        <button class="note-save" type="button"><i class="fas fa-save"></i>Зберегти</button>
-        <button class="cancel" type="button"><i class="fas fa-ban"></i>Відмінити</button>
+        <button class="add" @click="addTask" type="button"><i class="fas fa-plus"></i>Додати завдання</button>
+        <router-link :to="{name: 'home'}">
+          <button class="note-save" @click="save(selectNote, indexNote)" type="button">
+            <i class="fas fa-save"></i>
+            Зберегти та вийти
+        </button>
+        </router-link>
+        
+        <button @click="toggleDialogue" class="cancel" type="button"><i class="fas fa-ban"></i>Повернутися до всіх заміток</button>
       </div>
       <div class="task">
-        <p>Завдання відсутні</p> 
-        <div class="flex">
-          <tag-new-task v-for="(item, index) in selectNote.task" :key="index" :task="item" :index="index" :emitDeleteTask="emitDeleteTask" :emitEditTask="emitEditTask"></tag-new-task>
+        <p v-if="!selectNote.task[0]">Завдання відсутні</p> 
+        <div v-else class="flex">
+          <tag-new-task v-for="(item, index) in selectNote.task" :key="index" :task="item" :index="index" :emitDeleteTask="emitDeleteTask" :emitEditTask="emitEditTask" :editComplite="editComplite"></tag-new-task>
         </div>
       </div>
+      <tag-dialogue v-show="dialogue" @yes="toggleDialogue" @no="toggleDialogue" :text="'відмінити редагування не зберігшись'"></tag-dialogue>
   </div>
 </template>
 
 <script>
 import NewTask from './new-task';
+import Bg from './dialogue';
 export default {
   components:{
-    'tag-new-task':NewTask
+    'tag-new-task':NewTask,
+    'tag-dialogue': Bg
   },
   data () {
     return {
       edit: true,
-      selectNote: this.note
+      selectNote: this.note,
+      dialogue: false,
+      saveNote: false
     }
   },
   methods:{
+    toggleDialogue(){
+      this.dialogue = !this.dialogue;
+    },
     toggleEdit(){
       this.edit = !this.edit
     },
     emitDeleteTask(index){
-      this.taskDelete(this.indexNote, index);
+      this.selectNote.task.splice(index, 1);
     },
     emitEditTask(index, newTask){
-      this.editTask(this.indexNote, index, newTask);
+      this.selectNote.task[index].textNote = newTask;
+    },
+    editComplite(index){
+      this.selectNote.task[index].checked = !this.selectNote.task[index].checked;
+    },
+    addTask(){
+      this.selectNote.task.push({id: Date.now().toString(), checked: false, textNote: "Нове завдання"})
     }
   },
-  props:['note','taskDelete', 'indexNote', 'editTask']
+  props:['note', 'indexNote', 'save']
 }
 </script>
 
